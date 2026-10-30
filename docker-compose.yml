@@ -1,0 +1,50 @@
+# Offsyde + a local Ollama server.
+#
+#   docker compose up -d
+#   docker compose exec ollama ollama pull qwen2.5-coder:7b     # one-time model download
+#   docker compose run --rm app offsyde ingest                  # one-time data load
+#   open http://localhost:8000
+#
+# Optional PostgreSQL instead of SQLite:
+#   docker compose --profile postgres up -d
+#   and set OFFSYDE_DB_URL for the app service to the postgresql+psycopg URL below.
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      OFFSYDE_MODEL: ${OFFSYDE_MODEL:-qwen2.5-coder:7b}
+      # OFFSYDE_DB_URL: postgresql+psycopg://offsyde:offsyde@db:5432/offsyde
+    volumes:
+      - offsyde-data:/data
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-models:/root/.ollama
+    # GPU (NVIDIA): uncomment the block below.
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [gpu]
+
+  db:
+    image: postgres:16
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: offsyde
+      POSTGRES_PASSWORD: offsyde
+      POSTGRES_DB: offsyde
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  offsyde-data:
+  ollama-models:
+  pg-data:

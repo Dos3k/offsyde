@@ -1,0 +1,184 @@
+[
+ {
+  "id": "b01",
+  "category": "results",
+  "language": "en",
+  "question": "How many matches did Barcelona win in the 2019/20 La Liga data?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Barcelona' AND season_name='2019/2020' AND result='W'"
+ },
+ {
+  "id": "b02",
+  "category": "results",
+  "language": "en",
+  "question": "How many goals did Barcelona score in the 2018/19 La Liga season?",
+  "gold_sql": "SELECT SUM(goals_for) FROM team_matches WHERE team_name='Barcelona' AND season_name='2018/2019'"
+ },
+ {
+  "id": "b03",
+  "category": "results",
+  "language": "en",
+  "question": "How many goals did Barcelona concede in 2019/20?",
+  "gold_sql": "SELECT SUM(goals_against) FROM team_matches WHERE team_name='Barcelona' AND season_name='2019/2020'"
+ },
+ {
+  "id": "b04",
+  "category": "results",
+  "language": "en",
+  "question": "How many league points did Barcelona collect at home in 2018/19?",
+  "gold_sql": "SELECT SUM(points) FROM team_matches WHERE team_name='Barcelona' AND season_name='2018/2019' AND is_home=1"
+ },
+ {
+  "id": "b05",
+  "category": "results",
+  "language": "en",
+  "question": "How many matches did Barcelona draw in 2019/20?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Barcelona' AND season_name='2019/2020' AND result='D'"
+ },
+ {
+  "id": "b06",
+  "category": "results",
+  "language": "en",
+  "question": "Show all matches between Barcelona and Real Madrid with date, home team, away team and score.",
+  "gold_sql": "SELECT m.match_date, h.name, a.name, m.home_score, m.away_score FROM matches m JOIN teams h ON h.id=m.home_team_id JOIN teams a ON a.id=m.away_team_id WHERE h.name IN ('Barcelona','Real Madrid') AND a.name IN ('Barcelona','Real Madrid') AND m.competition_name='La Liga'"
+ },
+ {
+  "id": "b07",
+  "category": "results",
+  "language": "en",
+  "question": "Which match had the most goals in the 2018/19 La Liga data? Give date, home team, away team and score.",
+  "gold_sql": "SELECT m.match_date, h.name, a.name, m.home_score, m.away_score FROM matches m JOIN teams h ON h.id=m.home_team_id JOIN teams a ON a.id=m.away_team_id WHERE m.season_name='2018/2019' ORDER BY m.home_score+m.away_score DESC LIMIT 1"
+ },
+ {
+  "id": "b08",
+  "category": "results",
+  "language": "de",
+  "question": "Wie viele Auswärtssiege hatte Barcelona in der Saison 2018/19?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Barcelona' AND season_name='2018/2019' AND is_home=0 AND result='W'"
+ },
+ {
+  "id": "b09",
+  "category": "results",
+  "language": "en",
+  "question": "In how many matches did Barcelona keep a clean sheet in 2019/20?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Barcelona' AND season_name='2019/2020' AND goals_against=0"
+ },
+ {
+  "id": "b10",
+  "category": "results",
+  "language": "de",
+  "question": "Wie viele Spiele hat Barcelona 2018/19 verloren?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Barcelona' AND season_name='2018/2019' AND result='L'"
+ },
+ {
+  "id": "b11",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many goals did Lionel Messi score in the 2018/19 La Liga season?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.period<5 AND s.season_name='2018/2019' AND p.name='Lionel Andrés Messi Cuccittini'"
+ },
+ {
+  "id": "b12",
+  "category": "scoring",
+  "language": "en",
+  "question": "Who scored the most goals in the 2019/20 La Liga data? Give name and number of goals.",
+  "gold_sql": "SELECT p.name, COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.period<5 AND s.season_name='2019/2020' GROUP BY p.id, p.name ORDER BY COUNT(*) DESC LIMIT 1"
+ },
+ {
+  "id": "b13",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many goals did Luis Suárez score in total across both seasons?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.period<5 AND p.name='Luis Alberto Suárez Díaz'"
+ },
+ {
+  "id": "b14",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many penalty goals did Messi score in 2018/19?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.shot_type='Penalty' AND s.season_name='2018/2019' AND p.name='Lionel Andrés Messi Cuccittini'"
+ },
+ {
+  "id": "b15",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many direct free-kick goals did Barcelona score in 2018/19?",
+  "gold_sql": "SELECT COUNT(*) FROM shots WHERE is_goal=1 AND shot_type='Free Kick' AND season_name='2018/2019' AND team_id=(SELECT id FROM teams WHERE name = 'Barcelona')"
+ },
+ {
+  "id": "b16",
+  "category": "scoring",
+  "language": "en",
+  "question": "What was Messi's total xG in 2019/20? Round to 2 decimals.",
+  "gold_sql": "SELECT ROUND(SUM(s.xg),2) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.season_name='2019/2020' AND p.name='Lionel Andrés Messi Cuccittini'"
+ },
+ {
+  "id": "b17",
+  "category": "scoring",
+  "language": "de",
+  "question": "Wie viele Tore hat Messi in der Saison 2019/20 erzielt?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.period<5 AND s.season_name='2019/2020' AND p.name='Lionel Andrés Messi Cuccittini'"
+ },
+ {
+  "id": "b18",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many shots did Messi take in 2018/19?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.season_name='2018/2019' AND p.name='Lionel Andrés Messi Cuccittini'"
+ },
+ {
+  "id": "b19",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many headed goals did Barcelona score in 2019/20?",
+  "gold_sql": "SELECT COUNT(*) FROM shots WHERE is_goal=1 AND body_part='Head' AND season_name='2019/2020' AND team_id=(SELECT id FROM teams WHERE name = 'Barcelona')"
+ },
+ {
+  "id": "b20",
+  "category": "passing",
+  "language": "en",
+  "question": "Which player had the most goal assists in the 2018/19 La Liga data? Give name and count.",
+  "gold_sql": "SELECT p.name, SUM(ps.is_goal_assist) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE ps.season_name='2018/2019' GROUP BY p.id, p.name ORDER BY SUM(ps.is_goal_assist) DESC LIMIT 1"
+ },
+ {
+  "id": "b21",
+  "category": "passing",
+  "language": "en",
+  "question": "What was Sergio Busquets' pass completion rate in 2019/20, in percent rounded to 1 decimal?",
+  "gold_sql": "SELECT ROUND(100.0*SUM(ps.is_complete)/COUNT(*),1) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE ps.season_name='2019/2020' AND p.name='Sergio Busquets i Burgos'"
+ },
+ {
+  "id": "b22",
+  "category": "passing",
+  "language": "en",
+  "question": "How many progressive passes did Frenkie de Jong make in 2019/20?",
+  "gold_sql": "SELECT SUM(ps.is_progressive) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE ps.season_name='2019/2020' AND p.name='Frenkie de Jong'"
+ },
+ {
+  "id": "b23",
+  "category": "passing",
+  "language": "en",
+  "question": "Which Barcelona player completed the most passes in 2018/19? Give name and count.",
+  "gold_sql": "SELECT p.name, SUM(ps.is_complete) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE ps.season_name='2018/2019' AND ps.team_id=(SELECT id FROM teams WHERE name = 'Barcelona') GROUP BY p.id, p.name ORDER BY SUM(ps.is_complete) DESC LIMIT 1"
+ },
+ {
+  "id": "b24",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many yellow cards did Barcelona receive in 2019/20?",
+  "gold_sql": "SELECT COUNT(*) FROM events e JOIN matches m ON m.id=e.match_id WHERE e.card='Yellow Card' AND m.season_name='2019/2020' AND e.team_id=(SELECT id FROM teams WHERE name = 'Barcelona')"
+ },
+ {
+  "id": "b25",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many red cards, including second yellows, did Barcelona players get in 2018/19?",
+  "gold_sql": "SELECT COUNT(*) FROM events e JOIN matches m ON m.id=e.match_id WHERE e.card IN ('Red Card','Second Yellow') AND m.season_name='2018/2019' AND e.team_id=(SELECT id FROM teams WHERE name = 'Barcelona')"
+ },
+ {
+  "id": "b26",
+  "category": "squad",
+  "language": "en",
+  "question": "Which player started the most matches for Barcelona in 2018/19? Give name and count.",
+  "gold_sql": "SELECT p.name, COUNT(*) FROM lineups l JOIN players p ON p.id=l.player_id JOIN matches m ON m.id=l.match_id WHERE l.started=1 AND l.team_id=(SELECT id FROM teams WHERE name = 'Barcelona') AND m.season_name='2018/2019' GROUP BY p.id, p.name ORDER BY COUNT(*) DESC LIMIT 1"
+ }
+]

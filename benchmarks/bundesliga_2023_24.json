@@ -1,0 +1,303 @@
+[
+ {
+  "id": "q01",
+  "category": "results",
+  "language": "en",
+  "question": "How many matches did Bayer Leverkusen win?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Bayer Leverkusen' AND result='W'"
+ },
+ {
+  "id": "q02",
+  "category": "results",
+  "language": "en",
+  "question": "How many goals did Bayer Leverkusen score in total?",
+  "gold_sql": "SELECT SUM(goals_for) FROM team_matches WHERE team_name='Bayer Leverkusen'"
+ },
+ {
+  "id": "q03",
+  "category": "results",
+  "language": "en",
+  "question": "How many goals did Bayer Leverkusen concede?",
+  "gold_sql": "SELECT SUM(goals_against) FROM team_matches WHERE team_name='Bayer Leverkusen'"
+ },
+ {
+  "id": "q04",
+  "category": "results",
+  "language": "en",
+  "question": "How many league points did Leverkusen collect at home?",
+  "gold_sql": "SELECT SUM(points) FROM team_matches WHERE team_name='Bayer Leverkusen' AND is_home=1"
+ },
+ {
+  "id": "q05",
+  "category": "results",
+  "language": "en",
+  "question": "How many matches in the 2023/24 Bundesliga season ended in a draw?",
+  "gold_sql": "SELECT COUNT(*) FROM matches WHERE home_score = away_score AND season_name='2023/2024'"
+ },
+ {
+  "id": "q06",
+  "category": "results",
+  "language": "en",
+  "question": "List all 2023/24 Bundesliga matches with at least 6 total goals: date, home team, away team and score.",
+  "gold_sql": "SELECT m.match_date, h.name, a.name, m.home_score, m.away_score FROM matches m JOIN teams h ON h.id=m.home_team_id JOIN teams a ON a.id=m.away_team_id WHERE m.home_score+m.away_score >= 6 AND m.season_name='2023/2024'"
+ },
+ {
+  "id": "q07",
+  "category": "results",
+  "language": "en",
+  "question": "Show all matches between Bayer Leverkusen and Bayern Munich with date and score.",
+  "gold_sql": "SELECT m.match_date, h.name, a.name, m.home_score, m.away_score FROM matches m JOIN teams h ON h.id=m.home_team_id JOIN teams a ON a.id=m.away_team_id WHERE h.name IN ('Bayer Leverkusen','Bayern Munich') AND a.name IN ('Bayer Leverkusen','Bayern Munich')"
+ },
+ {
+  "id": "q08",
+  "category": "results",
+  "language": "en",
+  "question": "Against which opponent did Leverkusen score the most goals in total over both matches?",
+  "gold_sql": "SELECT opponent_name FROM team_matches WHERE team_name='Bayer Leverkusen' GROUP BY opponent_name ORDER BY SUM(goals_for) DESC LIMIT 1"
+ },
+ {
+  "id": "q09",
+  "category": "results",
+  "language": "en",
+  "question": "How many matches did Leverkusen win by exactly one goal?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Bayer Leverkusen' AND goals_for - goals_against = 1"
+ },
+ {
+  "id": "q10",
+  "category": "results",
+  "language": "en",
+  "question": "Which stadium hosted the most matches in the 2023/24 Bundesliga season?",
+  "gold_sql": "SELECT stadium FROM matches WHERE season_name='2023/2024' GROUP BY stadium ORDER BY COUNT(*) DESC LIMIT 1"
+ },
+ {
+  "id": "q11",
+  "category": "results",
+  "language": "en",
+  "question": "How many clean sheets did Bayer Leverkusen keep?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Bayer Leverkusen' AND goals_against=0"
+ },
+ {
+  "id": "q12",
+  "category": "results",
+  "language": "de",
+  "question": "Wie viele Heimspiele hat Bayer Leverkusen gewonnen?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Bayer Leverkusen' AND is_home=1 AND result='W'"
+ },
+ {
+  "id": "q13",
+  "category": "results",
+  "language": "de",
+  "question": "Wie viele Tore hat Bayer Leverkusen in Auswärtsspielen erzielt?",
+  "gold_sql": "SELECT SUM(goals_for) FROM team_matches WHERE team_name='Bayer Leverkusen' AND is_home=0"
+ },
+ {
+  "id": "q14",
+  "category": "results",
+  "language": "de",
+  "question": "In wie vielen Spielen hat Bayer Leverkusen mindestens zwei Gegentore kassiert?",
+  "gold_sql": "SELECT COUNT(*) FROM team_matches WHERE team_name='Bayer Leverkusen' AND goals_against>=2"
+ },
+ {
+  "id": "q15",
+  "category": "scoring",
+  "language": "en",
+  "question": "Who scored the most goals in the 2023/24 Bundesliga season? Give the player name and the number of goals.",
+  "gold_sql": "SELECT p.name, COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.period<5 AND s.season_name='2023/2024' GROUP BY p.id, p.name ORDER BY COUNT(*) DESC LIMIT 1"
+ },
+ {
+  "id": "q16",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many goals did Florian Wirtz score?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND p.name='Florian Wirtz'"
+ },
+ {
+  "id": "q17",
+  "category": "scoring",
+  "language": "en",
+  "question": "List the top 3 goal scorers of the 2023/24 Bundesliga season with their goal counts.",
+  "gold_sql": "SELECT p.name, COUNT(*) AS goals FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND s.period<5 AND s.season_name='2023/2024' GROUP BY p.id, p.name ORDER BY goals DESC LIMIT 3"
+ },
+ {
+  "id": "q18",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many penalty goals were scored in the 2023/24 Bundesliga season?",
+  "gold_sql": "SELECT COUNT(*) FROM shots WHERE is_goal=1 AND shot_type='Penalty' AND period<5 AND season_name='2023/2024'"
+ },
+ {
+  "id": "q19",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many headed goals did Bayer Leverkusen score?",
+  "gold_sql": "SELECT COUNT(*) FROM shots WHERE is_goal=1 AND body_part='Head' AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q20",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many goals did Leverkusen score from the 85th minute onwards?",
+  "gold_sql": "SELECT COUNT(*) FROM shots WHERE is_goal=1 AND minute>=85 AND period<5 AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q21",
+  "category": "scoring",
+  "language": "en",
+  "question": "How many shots did Bayer Leverkusen take in total?",
+  "gold_sql": "SELECT COUNT(*) FROM shots WHERE team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen') AND period<5"
+ },
+ {
+  "id": "q22",
+  "category": "scoring",
+  "language": "en",
+  "question": "What percentage of Leverkusen's shots were on target? Round to 1 decimal.",
+  "gold_sql": "SELECT ROUND(100.0*SUM(is_on_target)/COUNT(*),1) FROM shots WHERE team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen') AND period<5"
+ },
+ {
+  "id": "q23",
+  "category": "scoring",
+  "language": "en",
+  "question": "What is the total expected goals (xG) of Bayer Leverkusen? Round to 2 decimals.",
+  "gold_sql": "SELECT ROUND(SUM(xg),2) FROM shots WHERE team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen') AND period<5"
+ },
+ {
+  "id": "q24",
+  "category": "scoring",
+  "language": "en",
+  "question": "Which player had the highest total xG in the 2023/24 Bundesliga season? Give the name.",
+  "gold_sql": "SELECT p.name FROM shots s JOIN players p ON p.id=s.player_id WHERE s.season_name='2023/2024' GROUP BY p.id, p.name ORDER BY SUM(s.xg) DESC LIMIT 1"
+ },
+ {
+  "id": "q25",
+  "category": "scoring",
+  "language": "en",
+  "question": "In how many matches did Florian Wirtz score at least once?",
+  "gold_sql": "SELECT COUNT(DISTINCT s.match_id) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND p.name='Florian Wirtz'"
+ },
+ {
+  "id": "q26",
+  "category": "scoring",
+  "language": "de",
+  "question": "Wie viele Tore hat Boniface erzielt?",
+  "gold_sql": "SELECT COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.is_goal=1 AND p.name='Victor Okoh Boniface' AND s.period<5"
+ },
+ {
+  "id": "q27",
+  "category": "scoring",
+  "language": "de",
+  "question": "Wer hat in der Bundesliga-Saison 2023/24 die meisten Schüsse abgegeben? Nenne Name und Anzahl.",
+  "gold_sql": "SELECT p.name, COUNT(*) FROM shots s JOIN players p ON p.id=s.player_id WHERE s.season_name='2023/2024' GROUP BY p.id, p.name ORDER BY COUNT(*) DESC LIMIT 1"
+ },
+ {
+  "id": "q28",
+  "category": "passing",
+  "language": "en",
+  "question": "How many goal assists did Florian Wirtz provide?",
+  "gold_sql": "SELECT SUM(ps.is_goal_assist) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE p.name='Florian Wirtz'"
+ },
+ {
+  "id": "q29",
+  "category": "passing",
+  "language": "en",
+  "question": "Which player had the most goal assists in the 2023/24 Bundesliga season? Give name and count.",
+  "gold_sql": "SELECT p.name, SUM(ps.is_goal_assist) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE ps.season_name='2023/2024' GROUP BY p.id, p.name ORDER BY SUM(ps.is_goal_assist) DESC LIMIT 1"
+ },
+ {
+  "id": "q30",
+  "category": "passing",
+  "language": "en",
+  "question": "What was Granit Xhaka's pass completion rate in percent, rounded to 1 decimal?",
+  "gold_sql": "SELECT ROUND(100.0*SUM(ps.is_complete)/COUNT(*),1) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE p.name='Granit Xhaka'"
+ },
+ {
+  "id": "q31",
+  "category": "passing",
+  "language": "en",
+  "question": "Which player made the most progressive passes in the 2023/24 Bundesliga season? Give name and count.",
+  "gold_sql": "SELECT p.name, SUM(ps.is_progressive) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE ps.season_name='2023/2024' GROUP BY p.id, p.name ORDER BY SUM(ps.is_progressive) DESC LIMIT 1"
+ },
+ {
+  "id": "q32",
+  "category": "passing",
+  "language": "en",
+  "question": "How many corners did Bayer Leverkusen take?",
+  "gold_sql": "SELECT COUNT(*) FROM passes WHERE pass_type='Corner' AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q33",
+  "category": "passing",
+  "language": "en",
+  "question": "What is the overall pass completion rate of Bayer Leverkusen in percent, rounded to 1 decimal?",
+  "gold_sql": "SELECT ROUND(100.0*SUM(is_complete)/COUNT(*),1) FROM passes WHERE team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q34",
+  "category": "passing",
+  "language": "en",
+  "question": "What is Alex Grimaldo's average pass length? Round to 1 decimal.",
+  "gold_sql": "SELECT ROUND(AVG(ps.length),1) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE p.name='Alejandro Grimaldo García'"
+ },
+ {
+  "id": "q35",
+  "category": "passing",
+  "language": "de",
+  "question": "Wie viele Pässe hat Granit Xhaka gespielt?",
+  "gold_sql": "SELECT COUNT(*) FROM passes ps JOIN players p ON p.id=ps.passer_id WHERE p.name='Granit Xhaka'"
+ },
+ {
+  "id": "q36",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many yellow cards did Bayer Leverkusen receive?",
+  "gold_sql": "SELECT COUNT(*) FROM events WHERE card='Yellow Card' AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q37",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many red cards were shown in the 2023/24 Bundesliga season, including second yellows?",
+  "gold_sql": "SELECT COUNT(*) FROM events e JOIN matches m ON m.id=e.match_id WHERE e.card IN ('Red Card','Second Yellow') AND m.season_name='2023/2024'"
+ },
+ {
+  "id": "q38",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many tackles did Bayer Leverkusen make?",
+  "gold_sql": "SELECT COUNT(*) FROM events WHERE type='Duel' AND sub_type='Tackle' AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q39",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many fouls did Bayer Leverkusen commit?",
+  "gold_sql": "SELECT COUNT(*) FROM events WHERE type='Foul Committed' AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q40",
+  "category": "discipline",
+  "language": "en",
+  "question": "How many substitutions did Bayer Leverkusen make?",
+  "gold_sql": "SELECT COUNT(*) FROM events WHERE type='Substitution' AND team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ },
+ {
+  "id": "q41",
+  "category": "discipline",
+  "language": "de",
+  "question": "Wie viele gelbe Karten hat Granit Xhaka bekommen?",
+  "gold_sql": "SELECT COUNT(*) FROM events e JOIN players p ON p.id=e.player_id WHERE e.card='Yellow Card' AND p.name='Granit Xhaka'"
+ },
+ {
+  "id": "q42",
+  "category": "squad",
+  "language": "en",
+  "question": "Which Leverkusen player started the most matches? Give name and count.",
+  "gold_sql": "SELECT p.name, COUNT(*) FROM lineups l JOIN players p ON p.id=l.player_id WHERE l.started=1 AND l.team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen') GROUP BY p.id, p.name ORDER BY COUNT(*) DESC LIMIT 1"
+ },
+ {
+  "id": "q43",
+  "category": "squad",
+  "language": "en",
+  "question": "How many different players did Bayer Leverkusen use in total?",
+  "gold_sql": "SELECT COUNT(DISTINCT player_id) FROM lineups WHERE team_id=(SELECT id FROM teams WHERE name = 'Bayer Leverkusen')"
+ }
+]

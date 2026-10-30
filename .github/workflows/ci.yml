@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: offsyde
+          POSTGRES_PASSWORD: offsyde
+          POSTGRES_DB: offsyde_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U offsyde"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      OFFSYDE_TEST_PG_URL: postgresql+psycopg://offsyde:offsyde@localhost:5432/offsyde_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: pip install -e ".[dev,postgres]"
+      - name: Lint
+        run: ruff check . && ruff format --check .
+      - name: Tests (SQLite and PostgreSQL)
+        run: pytest
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t offsyde:ci .
+      - name: Smoke test
+        run: |
+          docker run -d --name offsyde -p 8000:8000 offsyde:ci
+          for i in $(seq 1 20); do
+            curl -sf localhost:8000/health && exit 0
+            sleep 1
+          done
+          docker logs offsyde
+          exit 1
